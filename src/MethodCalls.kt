@@ -7,10 +7,45 @@ fun main(args: Array<String>) {
     val classMethodReference = String::hashCode
 
 
+    /**
+     * Will print:
+     * objectMethodReference: 97
+     * classMethodReference: 98
+     *
+     */
     println("objectMethodReference: ${objectMethodReference()}\nclassMethodReference ${classMethodReference("b")}\n")
+
+    /**
+     * Will print:
+     * Parameters for hashCode:
+     *      No parameters.
+     * Returns: kotlin.Int
+     */
     printParameters(objectMethodReference)
-    printParameters(classMethodReference)
+
+
+    /**
+     * Will print:
+     * Parameters for hashCode:
+     *  	1. kotlin.Any
+     *Returns: kotlin.Int
+     */
+    printParameters(classMethodReference) // take a parameter a string on which the specified method will be called
+
+
+    /**
+     * Will print:
+     * a and b
+     */
+    string.myExtensionFunction("b")
+
+    val extensionFunctionObject = string::myExtensionFunction
+    extensionFunctionObject("b")
+
+
 }
+
+
 
 fun printParameters(function: KFunction<*>) {
     var nr = 1
@@ -23,5 +58,9 @@ fun printParameters(function: KFunction<*>) {
     }
     println("Returns: ${function.returnType}\n")
 
+}
+
+fun String.myExtensionFunction(string: String) {
+    println("$this and $string")
 }
 
