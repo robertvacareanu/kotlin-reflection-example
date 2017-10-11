@@ -38,11 +38,17 @@ fun main(args: Array<String>) {
      * a and b
      */
     string.myExtensionFunction("b")
-
     val extensionFunctionObject = string::myExtensionFunction
     extensionFunctionObject("b")
 
 
+    val javaClass = MethodCallsJava()
+    val javaFunction = javaClass::javaMethod
+    val javaFunctionStatic = MethodCallsJava::javaMethod
+    javaFunction()
+    javaFunctionStatic(javaClass)
+
+    javaClass.callKotlinFun()
 }
 
 
@@ -62,5 +68,17 @@ fun printParameters(function: KFunction<*>) {
 
 fun String.myExtensionFunction(string: String) {
     println("$this and $string")
+}
+
+class TestClass {
+    fun kotlinFunction() {
+        println("Inside Kotlin function")
+    }
+    companion object {
+        fun staticKotlinFunction() {
+            println("Inside static Kotlin function")
+        }
+    }
+
 }
 
