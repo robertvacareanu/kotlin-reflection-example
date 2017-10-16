@@ -1,8 +1,7 @@
 import kotlin.reflect.KFunction
 
-fun main(args: Array<String>) {
+fun functionReferenceExample() {
     val string = "a"
-
     val objectMethodReference = string::hashCode
     val classMethodReference = String::hashCode
 
@@ -31,26 +30,7 @@ fun main(args: Array<String>) {
      *Returns: kotlin.Int
      */
     printParameters(classMethodReference) // take a parameter a string on which the specified method will be called
-
-
-    /**
-     * Will print:
-     * a and b
-     */
-    string.myExtensionFunction("b")
-    val extensionFunctionObject = string::myExtensionFunction
-    extensionFunctionObject("b")
-
-
-    val javaClass = MethodCallsJava()
-    val javaFunction = javaClass::javaMethod
-    val javaFunctionStatic = MethodCallsJava::javaMethod
-    javaFunction()
-    javaFunctionStatic(javaClass)
-
-    javaClass.callKotlinFun()
 }
-
 
 
 fun printParameters(function: KFunction<*>) {
@@ -66,14 +46,40 @@ fun printParameters(function: KFunction<*>) {
 
 }
 
+fun extensionFunctionExample() {
+    val string = "a"
+    /**
+     * Will print:
+     * a and b
+     */
+    string.myExtensionFunction("b")
+    val extensionFunctionObject = string::myExtensionFunction
+    extensionFunctionObject("b")
+}
+
 fun String.myExtensionFunction(string: String) {
     println("$this and $string")
+}
+
+fun kotlinCallsJava() {
+    val javaClass = ASimpleJavaClass()
+    val javaFunction = javaClass::javaMethod
+    val javaFunctionStatic = ASimpleJavaClass::javaMethod
+    javaFunction()
+    javaFunctionStatic(javaClass)
+}
+
+fun javaCallsKotlin() {
+    val javaClass = ASimpleJavaClass()
+    javaClass.callKotlinFunFromJava()
+    javaClass.callKotlinStaticFunFromJava()
 }
 
 class TestClass {
     fun kotlinFunction() {
         println("Inside Kotlin function")
     }
+
     companion object {
         fun staticKotlinFunction() {
             println("Inside static Kotlin function")
@@ -81,4 +87,3 @@ class TestClass {
     }
 
 }
-
