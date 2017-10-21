@@ -61,6 +61,10 @@ fun String.myExtensionFunction(string: String) {
     println("$this and $string")
 }
 
+fun TestClass.anExtensionFunction() {
+    println("Extension function to TestClass")
+}
+
 fun kotlinCallsJava() {
     val javaClass = ASimpleJavaClass()
     val javaFunction = javaClass::javaMethod
@@ -73,6 +77,7 @@ fun javaCallsKotlin() {
     val javaClass = ASimpleJavaClass()
     javaClass.callKotlinFunFromJava()
     javaClass.callKotlinStaticFunFromJava()
+    javaClass.callExtensionFunFromJava()
 }
 
 class TestClass {

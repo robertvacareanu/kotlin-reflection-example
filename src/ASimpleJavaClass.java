@@ -31,6 +31,26 @@ public class ASimpleJavaClass {
 
     }
 
+    public void callExtensionFunFromJava() {
+        File f = new File("out/production/kotlin-reflection-example");
+        try {
+            URL url = f.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            ClassLoader cl = new URLClassLoader(urls);
+
+            Class<?> kotlinGeneratedClass = cl.loadClass("MethodCallsKt");
+
+            // Extension functions are compiled as static function that take as argument the object on which they are invoked
+            Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("anExtensionFunction", TestClass.class);
+            TestClass kotlinTestClass = new TestClass();
+            kotlinExtensionFunction.invoke(kotlinTestClass, kotlinTestClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void staticKotlinFunLoadClass() {
         File f = new File("out/production/kotlin-reflection-example");
         try {
@@ -45,7 +65,7 @@ public class ASimpleJavaClass {
             // The name of the generated class is <class_name>$Companion
             Class<?> kotlinCompanionGeneratedClass = cl.loadClass("TestClass$Companion");
 
-            invoke(kotlinCompanionGeneratedClass);
+            invokeStaticKotlinFunction(kotlinCompanionGeneratedClass);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -59,7 +79,7 @@ public class ASimpleJavaClass {
         if (fieldClass.isPresent()) {
             Class<?> companionClass = fieldClass.get().getType();
             try {
-                invoke(companionClass);
+                invokeStaticKotlinFunction(companionClass);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,7 +88,7 @@ public class ASimpleJavaClass {
 
     }
 
-    public void invoke(Class<?> kotlinCompanionGeneratedClass) throws Exception {
+    public void invokeStaticKotlinFunction(Class<?> kotlinCompanionGeneratedClass) throws Exception {
         // Get the method to be called using reflection
         Method staticKotlinFunction = kotlinCompanionGeneratedClass.getMethod("staticKotlinFunction");
 
