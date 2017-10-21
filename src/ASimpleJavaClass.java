@@ -44,7 +44,13 @@ public class ASimpleJavaClass {
             // Extension functions are compiled as static function that take as argument the object on which they are invoked
             Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("anExtensionFunction", TestClass.class);
             TestClass kotlinTestClass = new TestClass();
-            kotlinExtensionFunction.invoke(kotlinTestClass, kotlinTestClass);
+            // The first parameter represents the object on which the method is called. Since
+            // extension functions are actually static function, this argument is ignored
+            // The second argument is a varargs corresponding to the parameters the function takes
+            kotlinExtensionFunction.invoke(null, kotlinTestClass);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
