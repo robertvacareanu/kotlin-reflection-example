@@ -67,10 +67,21 @@ fun TestClass.anExtensionFunction() {
 
 fun kotlinCallsJava() {
     val javaClass = ASimpleJavaClass()
+
+    // Contrary to java, in kotlin ou can get the reference to a method in two ways:
+    // 1. By using an actual object of the class in which the method is defined
     val javaFunction = javaClass::javaMethod
+    // 2. By using the class
     val javaFunctionStatic = ASimpleJavaClass::javaMethod
+    // The difference comes when you will invoked them:
+    // 1. By using the first method you can simply invoke the method or call it as a regular function in kotlin since it is implied that it will act
+    // on the object used to get a reference to it
     javaFunction()
+    // 2. By using the second method you have to supply when you call it the object it will act on. This difference can be highlighted by
+    // calling the same object of type Method but giving as argument a different object of type ASimpleJavaClass. This will print different
+    // hashcode
     javaFunctionStatic(javaClass)
+    javaFunctionStatic(ASimpleJavaClass())
 }
 
 fun javaCallsKotlin() {
@@ -82,7 +93,7 @@ fun javaCallsKotlin() {
 
 class TestClass {
     fun kotlinFunction() {
-        println("Inside Kotlin function")
+        println("Inside Kotlin function $this")
     }
 
     companion object {

@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ASimpleJavaClass {
 
     public void javaMethod() {
-        System.out.println("Inside java method of ASimpleJavaClass");
+        System.out.println("Inside java method of ASimpleJavaClass" + this.toString());
     }
 
     public void callKotlinFunFromJava() {
@@ -57,7 +57,7 @@ public class ASimpleJavaClass {
 
     }
 
-    public void staticKotlinFunLoadClass() {
+    private void staticKotlinFunLoadClass() {
         File f = new File("out/production/kotlin-reflection-example");
         try {
             URL url = f.toURI().toURL();
@@ -78,7 +78,7 @@ public class ASimpleJavaClass {
         }
     }
 
-    public void staticKotlinFunFromField() {
+    private void staticKotlinFunFromField() {
         // Result of toGenericString: public static final TestClass$Companion TestClass.Companion
         Optional<Field> fieldClass = Arrays.stream(TestClass.class.getDeclaredFields()).filter((Field f) -> f.getName().equals("Companion")).findFirst();//
 
@@ -94,7 +94,7 @@ public class ASimpleJavaClass {
 
     }
 
-    public void invokeStaticKotlinFunction(Class<?> kotlinCompanionGeneratedClass) throws Exception {
+    private void invokeStaticKotlinFunction(Class<?> kotlinCompanionGeneratedClass) throws Exception {
         // Get the method to be called using reflection
         Method staticKotlinFunction = kotlinCompanionGeneratedClass.getMethod("staticKotlinFunction");
 
