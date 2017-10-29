@@ -1,3 +1,5 @@
+package methodcalls
+
 import kotlin.reflect.KFunction
 
 fun functionReferenceExample() {
@@ -62,7 +64,7 @@ fun String.myExtensionFunction(string: String) {
 }
 
 fun TestClass.anExtensionFunction() {
-    println("Extension function to TestClass")
+    println("Extension function to methodcalls.TestClass")
 }
 
 fun kotlinCallsJava() {
@@ -70,9 +72,9 @@ fun kotlinCallsJava() {
 
     // Contrary to java, in kotlin ou can get the reference to a method in two ways:
     // 1. By using an actual object of the class in which the method is defined
-    val javaFunction = javaClass::javaMethod
+    val javaFunction = javaClass::aSimpleJavaMethod
     // 2. By using the class
-    val javaFunctionStatic = ASimpleJavaClass::javaMethod
+    val javaFunctionStatic = ASimpleJavaClass::aSimpleJavaMethod
     // The difference comes when you will invoked them:
     // 1. By using the first method you can simply invoke the method or call it as a regular function in kotlin since it is implied that it will act
     // on the object used to get a reference to it
@@ -92,7 +94,7 @@ fun javaCallsKotlin() {
 }
 
 class TestClass {
-    fun kotlinFunction() {
+    fun aSimpleKotlinFunction() {
         println("Inside Kotlin function $this")
     }
 

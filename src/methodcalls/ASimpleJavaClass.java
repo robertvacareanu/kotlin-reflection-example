@@ -1,3 +1,5 @@
+package methodcalls;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -10,13 +12,13 @@ import java.util.Optional;
 
 public class ASimpleJavaClass {
 
-    public void javaMethod() {
-        System.out.println("Inside java method of ASimpleJavaClass" + this.toString());
+    public void aSimpleJavaMethod() {
+        System.out.println("Inside aSimpleJavaMethod of ASimpleJavaClass" + this.toString());
     }
 
     public void callKotlinFunFromJava() {
         try {
-            Method kotlinFunction = TestClass.class.getMethod("kotlinFunction");
+            Method kotlinFunction = TestClass.class.getMethod("aSimpleKotlinFunction");
             TestClass kotlinTestClass = new TestClass();
             kotlinFunction.invoke(kotlinTestClass);
         } catch (Exception e) {
@@ -32,6 +34,7 @@ public class ASimpleJavaClass {
     }
 
     public void callExtensionFunFromJava() {
+        // Path to where are .class files generated
         File f = new File("out/production/kotlin-reflection-example");
         try {
             URL url = f.toURI().toURL();
@@ -42,7 +45,7 @@ public class ASimpleJavaClass {
             Class<?> kotlinGeneratedClass = cl.loadClass("MethodCallsKt");
 
             // Extension functions are compiled as static function that take as argument the object on which they are invoked
-            Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("anExtensionFunction", TestClass.class);
+            Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("methodcalls.anExtensionFunction", TestClass.class);
             TestClass kotlinTestClass = new TestClass();
             // The first parameter represents the object on which the method is called. Since
             // extension functions are actually static function, this argument is ignored
@@ -58,6 +61,7 @@ public class ASimpleJavaClass {
     }
 
     private void staticKotlinFunLoadClass() {
+        // Path to where are .class files generated
         File f = new File("out/production/kotlin-reflection-example");
         try {
             URL url = f.toURI().toURL();
@@ -69,7 +73,7 @@ public class ASimpleJavaClass {
 
 
             // The name of the generated class is <class_name>$Companion
-            Class<?> kotlinCompanionGeneratedClass = cl.loadClass("TestClass$Companion");
+            Class<?> kotlinCompanionGeneratedClass = cl.loadClass("methodcalls.TestClass$Companion");
 
             invokeStaticKotlinFunction(kotlinCompanionGeneratedClass);
 
@@ -79,8 +83,8 @@ public class ASimpleJavaClass {
     }
 
     private void staticKotlinFunFromField() {
-        // Result of toGenericString: public static final TestClass$Companion TestClass.Companion
-        Optional<Field> fieldClass = Arrays.stream(TestClass.class.getDeclaredFields()).filter((Field f) -> f.getName().equals("Companion")).findFirst();//
+        // Result of toGenericString: public static final methodcalls.TestClass$Companion methodcalls.TestClass.Companion
+        Optional<Field> fieldClass = Arrays.stream(TestClass.class.getDeclaredFields()).filter((Field f) -> f.getName().equals("Companion")).findFirst();
 
         if (fieldClass.isPresent()) {
             Class<?> companionClass = fieldClass.get().getType();
