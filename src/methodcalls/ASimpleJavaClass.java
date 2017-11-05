@@ -42,10 +42,10 @@ public class ASimpleJavaClass {
 
             ClassLoader cl = new URLClassLoader(urls);
 
-            Class<?> kotlinGeneratedClass = cl.loadClass("MethodCallsKt");
+            Class<?> kotlinGeneratedClass = cl.loadClass("methodcalls.MethodCallsKt");
 
             // Extension functions are compiled as static function that take as argument the object on which they are invoked
-            Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("methodcalls.anExtensionFunction", TestClass.class);
+            Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("anExtensionFunction", TestClass.class);
             TestClass kotlinTestClass = new TestClass();
             // The first parameter represents the object on which the method is called. Since
             // extension functions are actually static function, this argument is ignored
