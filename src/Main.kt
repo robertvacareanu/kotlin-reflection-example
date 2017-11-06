@@ -1,3 +1,5 @@
+import fields.FieldTestClass
+import fields.printAllProperties
 import methodcalls.extensionFunctionExample
 import methodcalls.functionReferenceExample
 import methodcalls.javaCallsKotlin
@@ -16,5 +18,9 @@ fun main(args: Array<String>) {
 
     println("\n\nJava calls kotlin")
     javaCallsKotlin()
+
+    println("\n\nProperties")
+    printAllProperties(FieldTestClass::class)
+
 
 }

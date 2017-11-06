@@ -1,10 +1,8 @@
 package methodcalls;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -35,14 +33,14 @@ public class ASimpleJavaClass {
 
     public void callExtensionFunFromJava() {
         // Path to where are .class files generated
-        File f = new File("out/production/kotlin-reflection-example");
+        File generatedClassPath = new File("out/production/kotlin-reflection-example");
         try {
-            URL url = f.toURI().toURL();
+            URL url = generatedClassPath.toURI().toURL();
             URL[] urls = new URL[]{url};
 
-            ClassLoader cl = new URLClassLoader(urls);
+            ClassLoader classLoader = new URLClassLoader(urls);
 
-            Class<?> kotlinGeneratedClass = cl.loadClass("methodcalls.MethodCallsKt");
+            Class<?> kotlinGeneratedClass = classLoader.loadClass("methodcalls.MethodCallsKt");
 
             // Extension functions are compiled as static function that take as argument the object on which they are invoked
             Method kotlinExtensionFunction = kotlinGeneratedClass.getMethod("anExtensionFunction", TestClass.class);
@@ -54,7 +52,7 @@ public class ASimpleJavaClass {
 
 
 
-        } catch (Exception e) {
+        } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
 
@@ -62,22 +60,22 @@ public class ASimpleJavaClass {
 
     private void staticKotlinFunLoadClass() {
         // Path to where are .class files generated
-        File f = new File("out/production/kotlin-reflection-example");
+        File generatedClassPath = new File("out/production/kotlin-reflection-example");
         try {
-            URL url = f.toURI().toURL();
+            URL url = generatedClassPath.toURI().toURL();
             URL[] urls = new URL[]{url};
 
 
             // Use url to be able to load from a different path
-            ClassLoader cl = new URLClassLoader(urls);
+            ClassLoader classLoader = new URLClassLoader(urls);
 
 
             // The name of the generated class is <class_name>$Companion
-            Class<?> kotlinCompanionGeneratedClass = cl.loadClass("methodcalls.TestClass$Companion");
+            Class<?> kotlinCompanionGeneratedClass = classLoader.loadClass("methodcalls.TestClass$Companion");
 
             invokeStaticKotlinFunction(kotlinCompanionGeneratedClass);
 
-        } catch (Exception e) {
+        } catch (MalformedURLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -88,37 +86,36 @@ public class ASimpleJavaClass {
 
         if (fieldClass.isPresent()) {
             Class<?> companionClass = fieldClass.get().getType();
-            try {
-                invokeStaticKotlinFunction(companionClass);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+            invokeStaticKotlinFunction(companionClass);
         }
 
     }
 
-    private void invokeStaticKotlinFunction(Class<?> kotlinCompanionGeneratedClass) throws Exception {
+    private void invokeStaticKotlinFunction(Class<?> kotlinCompanionGeneratedClass)  {
         // Get the method to be called using reflection
-        Method staticKotlinFunction = kotlinCompanionGeneratedClass.getMethod("staticKotlinFunction");
+        try {
+            Method staticKotlinFunction = kotlinCompanionGeneratedClass.getMethod("staticKotlinFunction");
 
-        // The generated class contains a private constructor that takes one argument: kotlin.jvm.internal.DefaultConstructorMarker
-        Constructor<?> kotlinCompanionConstructor = kotlinCompanionGeneratedClass.getConstructors()[0];
+            // The generated class contains a private constructor that takes one argument: kotlin.jvm.internal.DefaultConstructorMarker
+            Constructor<?> kotlinCompanionConstructor = kotlinCompanionGeneratedClass.getConstructors()[0];
 
-        // The constructor is private. It must be set accessible to be able to invoke it
-        kotlinCompanionConstructor.setAccessible(true);
+            // The constructor is private. It must be set accessible to be able to invoke it
+            kotlinCompanionConstructor.setAccessible(true);
 
-        // It takes a parameter: class kotlin.jvm.internal.DefaultConstructorMarker
-        Parameter p = kotlinCompanionConstructor.getParameters()[0];
-        Class parameterClass = p.getType();
+            // It takes a parameter: class kotlin.jvm.internal.DefaultConstructorMarker
+            Parameter p = kotlinCompanionConstructor.getParameters()[0];
+            Class parameterClass = p.getType();
 
-        // The kotlin.jvm.internal.DefaultConstructorMarker class contains a 0 parameter private constructor
-        Constructor parameterClassConstructor = parameterClass.getDeclaredConstructors()[0];
-        parameterClassConstructor.setAccessible(true);
-        Object defaultConstructorMarkerObject = parameterClassConstructor.newInstance();
+            // The kotlin.jvm.internal.DefaultConstructorMarker class contains a 0 parameter private constructor
+            Constructor parameterClassConstructor = parameterClass.getDeclaredConstructors()[0];
+            parameterClassConstructor.setAccessible(true);
+            Object defaultConstructorMarkerObject = parameterClassConstructor.newInstance();
 
-        Object kotlinCompanionObject = kotlinCompanionConstructor.newInstance(defaultConstructorMarkerObject);
-        staticKotlinFunction.invoke(kotlinCompanionObject);
+            Object kotlinCompanionObject = kotlinCompanionConstructor.newInstance(defaultConstructorMarkerObject);
+            staticKotlinFunction.invoke(kotlinCompanionObject);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 }
