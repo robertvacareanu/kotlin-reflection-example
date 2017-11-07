@@ -1,4 +1,5 @@
 import fields.FieldTestClass
+import fields.externalExtensionProperties
 import fields.printAllProperties
 import methodcalls.extensionFunctionExample
 import methodcalls.functionReferenceExample
@@ -21,6 +22,6 @@ fun main(args: Array<String>) {
 
     println("\n\nProperties")
     printAllProperties(FieldTestClass::class)
-
+    externalExtensionProperties()
 
 }
