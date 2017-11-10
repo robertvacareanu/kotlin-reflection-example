@@ -17,6 +17,9 @@ fun printAllProperties(klass: KClass<*>) {
     }
 }
 
+/**
+ * Searches for the generated .class file where the extension function will be generated as a static function
+ */
 fun externalExtensionProperties() {
     val classGeneratedPath = File("out/production/kotlin-reflection-example")
 
@@ -24,6 +27,8 @@ fun externalExtensionProperties() {
 
     val loader = URLClassLoader(urls)
 
+    // The static function is generated inside a .class file that matches the name of the file in which it was written
+    // In this case it is FieldCallsKt. Note that in the case of kotlin files, they are generated with a "Kt" at the end
     val klass = loader.loadClass("fields.FieldCallsKt")
     val method = klass.getDeclaredMethod("getExtensionProperty", FieldTestClass::class.java)
 
