@@ -1,2 +1,3 @@
 # kotlin-reflection-example
-Simple examples of reflection in kotlin and java
+Examples of reflection for:
+* Calling from both java and kotlin extension functions, extension properties, functions defined in companion objects
