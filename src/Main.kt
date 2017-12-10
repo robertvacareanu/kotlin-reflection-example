@@ -1,3 +1,5 @@
+import annotations.javaAccessAnnotations
+import annotations.kotlinAccessAnnotation
 import fields.FieldTestClass
 import fields.externalExtensionProperties
 import fields.printAllProperties
@@ -23,5 +25,9 @@ fun main(args: Array<String>) {
     println("\n\nProperties")
     printAllProperties(FieldTestClass::class)
     externalExtensionProperties()
+
+    println("\n\nAnnotations")
+    kotlinAccessAnnotation()
+    javaAccessAnnotations()
 
 }

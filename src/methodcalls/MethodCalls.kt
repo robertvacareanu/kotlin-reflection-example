@@ -70,7 +70,7 @@ fun TestClass.anExtensionFunction() {
 fun kotlinCallsJava() {
     val javaClass = ASimpleJavaClass()
 
-    // Contrary to java, in kotlin ou can get the reference to a method in two ways:
+    // Contrary to java, in kotlin you can get the reference to a method in two ways:
     // 1. By using an actual object of the class in which the method is defined
     val javaFunction = javaClass::aSimpleJavaMethod
     // 2. By using the class
